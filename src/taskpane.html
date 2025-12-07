@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatGPT Email Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- Settings Panel (shown when not configured) -->
+        <div id="settings-panel" class="panel hidden">
+            <h2>⚙️ Setup</h2>
+            <div class="form-group">
+                <label for="api-key">OpenAI API Key</label>
+                <input type="password" id="api-key" placeholder="sk-...">
+                <small>Your API key is stored locally on this device only.</small>
+            </div>
+            <div class="form-group">
+                <label for="system-instructions">Custom Instructions (Optional)</label>
+                <textarea id="system-instructions" rows="4" placeholder="E.g., My boss prefers formal language, bullet points, and concise responses. Always sign off with 'Best regards'..."></textarea>
+                <small>These instructions will be included with every request to ChatGPT.</small>
+            </div>
+            <div class="form-group">
+                <label for="model-select">Model</label>
+                <select id="model-select">
+                    <option value="gpt-4o">GPT-4o (Recommended)</option>
+                    <option value="gpt-4o-mini">GPT-4o Mini (Faster/Cheaper)</option>
+                    <option value="gpt-4-turbo">GPT-4 Turbo</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo (Fastest)</option>
+                </select>
+            </div>
+            <button id="save-settings" class="btn btn-primary">Save Settings</button>
+        </div>
+
+        <!-- Main Panel -->
+        <div id="main-panel" class="panel hidden">
+            <div class="header">
+                <h2>ChatGPT Assistant</h2>
+                <button id="open-settings" class="btn-icon" title="Settings">⚙️</button>
+            </div>
+
+            <!-- Email Info -->
+            <div id="email-info" class="email-info">
+                <div class="email-subject"></div>
+                <div class="email-from"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="actions">
+                <button id="btn-summarize" class="btn btn-action">
+                    📝 Summarize
+                </button>
+                <button id="btn-reply" class="btn btn-action">
+                    ✉️ Draft Reply
+                </button>
+                <button id="btn-action-items" class="btn btn-action">
+                    ✅ Action Items
+                </button>
+                <button id="btn-tone" class="btn btn-action">
+                    🎭 Analyze Tone
+                </button>
+            </div>
+
+            <!-- Custom Prompt -->
+            <div class="custom-prompt-section">
+                <label for="custom-prompt">Custom Prompt</label>
+                <textarea id="custom-prompt" rows="2" placeholder="Ask ChatGPT anything about this email..."></textarea>
+                <button id="btn-custom" class="btn btn-secondary">Send Custom Prompt</button>
+            </div>
+
+            <!-- Response Area -->
+            <div id="response-section" class="response-section hidden">
+                <div class="response-header">
+                    <h3>Response</h3>
+                    <div class="response-actions">
+                        <button id="btn-copy" class="btn-small" title="Copy to clipboard">📋 Copy</button>
+                        <button id="btn-insert" class="btn-small" title="Insert into email">📥 Insert</button>
+                    </div>
+                </div>
+                <div id="response-content" class="response-content"></div>
+            </div>
+
+            <!-- Loading Indicator -->
+            <div id="loading" class="loading hidden">
+                <div class="spinner"></div>
+                <span>Thinking...</span>
+            </div>
+
+            <!-- Error Display -->
+            <div id="error" class="error hidden"></div>
+        </div>
+    </div>
+
+    <script src="taskpane.js"></script>
+</body>
+</html>

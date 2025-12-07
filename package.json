@@ -1,0 +1,20 @@
+{
+  "name": "outlook-chatgpt-addin",
+  "version": "1.0.0",
+  "description": "Outlook Add-In that integrates with ChatGPT for email summarization and reply drafting",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "outlook",
+    "add-in",
+    "chatgpt",
+    "openai",
+    "email"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {}
+}
