@@ -200,9 +200,9 @@
 
       <Resources>
         <bt:Images>
-          <bt:Image id="icon16" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-16.png"/>
-          <bt:Image id="icon32" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-32.png"/>
-          <bt:Image id="icon80" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-80.png"/>
+          <bt:Image id="icon16" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-16.png"/>
+          <bt:Image id="icon32" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-32.png"/>
+          <bt:Image id="icon80" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-80.png"/>
         </bt:Images>
         <bt:Urls>
           <bt:Url id="functionFile" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/src/functions.html"/>
