@@ -11,7 +11,7 @@
     <div id="app">
         <!-- Settings Panel (shown when not configured) -->
         <div id="settings-panel" class="panel hidden">
-            <h2>⚙️ Setup</h2>
+            <h2>Settings</h2>
             <div class="form-group">
                 <label for="api-key">OpenAI API Key</label>
                 <input type="password" id="api-key" placeholder="sk-...">
@@ -37,8 +37,16 @@
         <!-- Main Panel -->
         <div id="main-panel" class="panel hidden">
             <div class="header">
-                <h2>ChatGPT Assistant</h2>
-                <button id="open-settings" class="btn-icon" title="Settings">⚙️</button>
+                <div class="header-title">
+                    <div class="app-logo">GPT</div>
+                    <h2>Email Assistant</h2>
+                </div>
+                <button id="open-settings" class="btn-icon" title="Settings">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 10a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0-1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        <path d="M6.5 1a.5.5 0 0 0-.5.5v1.02a4.5 4.5 0 0 0-1.56.64l-.72-.72a.5.5 0 0 0-.71 0l-.7.7a.5.5 0 0 0 0 .71l.72.72A4.5 4.5 0 0 0 2.4 6H1.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h.9a4.5 4.5 0 0 0 .64 1.56l-.72.72a.5.5 0 0 0 0 .71l.7.7a.5.5 0 0 0 .71 0l.72-.72a4.5 4.5 0 0 0 1.56.64v.9a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-.9a4.5 4.5 0 0 0 1.56-.64l.72.72a.5.5 0 0 0 .71 0l.7-.7a.5.5 0 0 0 0-.71l-.72-.72A4.5 4.5 0 0 0 12.6 9h.9a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-.9a4.5 4.5 0 0 0-.64-1.56l.72-.72a.5.5 0 0 0 0-.71l-.7-.7a.5.5 0 0 0-.71 0l-.72.72A4.5 4.5 0 0 0 9 2.52V1.5a.5.5 0 0 0-.5-.5h-2z"/>
+                    </svg>
+                </button>
             </div>
 
             <!-- Email Info -->
@@ -49,18 +57,10 @@
 
             <!-- Action Buttons -->
             <div class="actions">
-                <button id="btn-summarize" class="btn btn-action">
-                    📝 Summarize
-                </button>
-                <button id="btn-reply" class="btn btn-action">
-                    ✉️ Draft Reply
-                </button>
-                <button id="btn-action-items" class="btn btn-action">
-                    ✅ Action Items
-                </button>
-                <button id="btn-tone" class="btn btn-action">
-                    🎭 Analyze Tone
-                </button>
+                <button id="btn-summarize" class="btn btn-action">Summarize</button>
+                <button id="btn-reply" class="btn btn-action">Draft Reply</button>
+                <button id="btn-action-items" class="btn btn-action">Action Items</button>
+                <button id="btn-tone" class="btn btn-action">Analyze Tone</button>
             </div>
 
             <!-- Custom Prompt -->
@@ -75,8 +75,8 @@
                 <div class="response-header">
                     <h3>Response</h3>
                     <div class="response-actions">
-                        <button id="btn-copy" class="btn-small" title="Copy to clipboard">📋 Copy</button>
-                        <button id="btn-insert" class="btn-small" title="Insert into email">📥 Insert</button>
+                        <button id="btn-copy" class="btn-small" title="Copy to clipboard">Copy</button>
+                        <button id="btn-insert" class="btn-small" title="Insert into email">Insert</button>
                     </div>
                 </div>
                 <div id="response-content" class="response-content"></div>
