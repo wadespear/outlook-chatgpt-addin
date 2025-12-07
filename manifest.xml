@@ -9,8 +9,8 @@
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="ChatGPT Email Assistant"/>
   <Description DefaultValue="Summarize emails and draft replies using ChatGPT"/>
-  <IconUrl DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-32.png"/>
-  <HighResolutionIconUrl DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-64.png"/>
+  <IconUrl DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-32.png"/>
+  <HighResolutionIconUrl DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-64.png"/>
   <SupportUrl DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin"/>
   <AppDomains>
     <AppDomain>https://api.openai.com</AppDomain>
@@ -95,9 +95,9 @@
     </Hosts>
     <Resources>
       <bt:Images>
-        <bt:Image id="Icon.16x16" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-16.png"/>
-        <bt:Image id="Icon.32x32" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-32.png"/>
-        <bt:Image id="Icon.80x80" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/hello-world/outlook-hello-world/assets/icon-80.png"/>
+        <bt:Image id="Icon.16x16" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-16.png"/>
+        <bt:Image id="Icon.32x32" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-32.png"/>
+        <bt:Image id="Icon.80x80" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/assets/icon-80.png"/>
       </bt:Images>
       <bt:Urls>
         <bt:Url id="Taskpane.Url" DefaultValue="https://wadespear.github.io/outlook-chatgpt-addin/src/taskpane.html"/>
