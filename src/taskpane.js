@@ -64,7 +64,7 @@ function setupEventListeners() {
     document.getElementById('btn-summarize').addEventListener('click', () => handleAction('summarize'));
     document.getElementById('btn-reply').addEventListener('click', () => handleAction('reply'));
     document.getElementById('btn-action-items').addEventListener('click', () => handleAction('action-items'));
-    document.getElementById('btn-tone').addEventListener('click', () => handleAction('tone'));
+    document.getElementById('btn-polish').addEventListener('click', handlePolishReply);
     document.getElementById('btn-custom').addEventListener('click', handleCustomPrompt);
 
     // Response actions
@@ -192,9 +192,6 @@ async function handleAction(action) {
         case 'action-items':
             prompt = `Please extract and list all action items, tasks, deadlines, or requests from this email in a clear bullet-point format:\n\n${currentEmailContent}`;
             break;
-        case 'tone':
-            prompt = `Please analyze the tone and sentiment of this email. Describe whether it's formal/informal, positive/negative/neutral, urgent/relaxed, and any other notable characteristics:\n\n${currentEmailContent}`;
-            break;
         default:
             return;
     }
@@ -215,6 +212,80 @@ async function handleCustomPrompt() {
         : customPrompt;
 
     await sendToChatGPT(fullPrompt);
+}
+
+async function handlePolishReply() {
+    const item = Office.context.mailbox.item;
+
+    if (!item) {
+        showError('No email context available.');
+        return;
+    }
+
+    // Check if we're in compose mode
+    if (!item.body || !item.body.getAsync) {
+        showError('Polish Reply only works when composing an email.');
+        return;
+    }
+
+    showLoading(true);
+    hideError();
+    hideResponse();
+
+    // Get the current body content
+    item.body.getAsync(Office.CoercionType.Text, async (result) => {
+        if (result.status !== Office.AsyncResultStatus.Succeeded) {
+            showLoading(false);
+            showError('Unable to read email content.');
+            return;
+        }
+
+        const fullBody = result.value;
+
+        // Extract just the user's reply (before the quoted content)
+        const userReply = extractUserReply(fullBody);
+
+        if (!userReply || userReply.trim().length < 10) {
+            showLoading(false);
+            showError('Please write your reply first, then click Polish Reply.');
+            return;
+        }
+
+        const prompt = `Please polish and improve this email reply. Make it more professional, clear, and well-written while preserving the original meaning and intent. Do not include a subject line or sign-off - just the polished body text.\n\nOriginal reply:\n${userReply}`;
+
+        await sendToChatGPT(prompt);
+    });
+}
+
+function extractUserReply(fullBody) {
+    // Common patterns that indicate the start of quoted/forwarded content
+    const quotePatterns = [
+        /^-{2,}\s*Original Message\s*-{2,}/mi,
+        /^From:\s+.+$/mi,
+        /^On\s+.+wrote:$/mi,
+        /^_{2,}/m,
+        /^>{1,}/m,
+        /^Sent:\s+.+$/mi,
+        /^To:\s+.+$/mi,
+        /^Subject:\s+.+$/mi,
+        /^-{3,}$/m,
+        /^_{3,}$/m
+    ];
+
+    let cutoffIndex = fullBody.length;
+
+    // Find the earliest occurrence of any quote pattern
+    for (const pattern of quotePatterns) {
+        const match = fullBody.match(pattern);
+        if (match && match.index < cutoffIndex) {
+            cutoffIndex = match.index;
+        }
+    }
+
+    // Extract the user's reply (everything before the quoted content)
+    let userReply = fullBody.substring(0, cutoffIndex).trim();
+
+    return userReply;
 }
 
 async function sendToChatGPT(userPrompt) {
