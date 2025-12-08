@@ -15,6 +15,8 @@ let currentEmailContent = null;
 let currentEmailSubject = null;
 let currentEmailFrom = null;
 let isComposing = false;
+let currentUserName = null;
+let currentUserEmail = null;
 
 // Initialize Office
 Office.onReady((info) => {
@@ -24,6 +26,9 @@ Office.onReady((info) => {
 });
 
 function initializeApp() {
+    // Get current user info
+    loadCurrentUser();
+
     // Check if settings are configured
     const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
 
@@ -39,6 +44,15 @@ function initializeApp() {
 
     // Load saved settings into form
     loadSettingsIntoForm();
+}
+
+function loadCurrentUser() {
+    // Get the current user's display name and email from the mailbox
+    const userProfile = Office.context.mailbox.userProfile;
+    if (userProfile) {
+        currentUserName = userProfile.displayName || '';
+        currentUserEmail = userProfile.emailAddress || '';
+    }
 }
 
 function setupEventListeners() {
@@ -173,7 +187,7 @@ async function handleAction(action) {
             prompt = `Please provide a concise summary of this email. Highlight the key points, any requests made, and important details:\n\n${currentEmailContent}`;
             break;
         case 'reply':
-            prompt = `Please draft a professional reply to this email. The reply should be appropriate for the context and tone of the original message:\n\nOriginal Email:\n${currentEmailContent}`;
+            prompt = `Please draft a professional reply to this email. The reply should be appropriate for the context and tone of the original message. Do not include a sign-off or name at the end - the user will add their own signature.\n\nOriginal Email from ${currentEmailFrom}:\n${currentEmailContent}`;
             break;
         case 'action-items':
             prompt = `Please extract and list all action items, tasks, deadlines, or requests from this email in a clear bullet-point format:\n\n${currentEmailContent}`;
