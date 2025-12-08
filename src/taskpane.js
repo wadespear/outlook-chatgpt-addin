@@ -187,7 +187,18 @@ async function handleAction(action) {
             prompt = `Please provide a concise summary of this email. Highlight the key points, any requests made, and important details:\n\n${currentEmailContent}`;
             break;
         case 'reply':
-            prompt = `Please draft a professional reply to this email. The reply should be appropriate for the context and tone of the original message. Do not include a sign-off or name at the end - the user will add their own signature. Do not include a Subject line - just the body of the reply.\n\nOriginal Email from ${currentEmailFrom}:\n${currentEmailContent}`;
+            prompt = `Please draft a professional reply to this email on behalf of me (${currentUserName || 'the recipient'}).
+
+IMPORTANT: I am the RECIPIENT of this email. ${currentEmailFrom} is the SENDER who wrote to me. Do NOT confuse these roles - you are helping ME reply to THEM.
+
+Requirements:
+- Draft a reply FROM me TO ${currentEmailFrom}
+- Do not include a sign-off or name at the end - I will add my own signature
+- Do not include a Subject line - just the body of the reply
+- The reply should be appropriate for the context and tone of the original message
+
+Original Email sent TO me FROM ${currentEmailFrom}:
+${currentEmailContent}`;
             break;
         case 'action-items':
             prompt = `Please extract and list all action items, tasks, deadlines, or requests from this email in a clear bullet-point format:\n\n${currentEmailContent}`;
@@ -306,7 +317,7 @@ async function sendToChatGPT(userPrompt) {
     // Build system prompt
     let systemPrompt = DEFAULT_SYSTEM_PROMPT;
     if (customInstructions) {
-        systemPrompt += `\n\nAdditional instructions from user:\n${customInstructions}`;
+        systemPrompt += `\n\nCRITICAL - User's Custom Instructions (YOU MUST FOLLOW THESE):\n${customInstructions}\n\nAlways apply these custom instructions to every response.`;
     }
 
     try {
