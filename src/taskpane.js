@@ -17,6 +17,7 @@ let currentEmailFrom = null;
 let isComposing = false;
 let currentUserName = null;
 let currentUserEmail = null;
+let conversationHistory = []; // Stores the chat history for follow-up requests
 
 // Initialize Office
 Office.onReady((info) => {
@@ -70,6 +71,10 @@ function setupEventListeners() {
     // Response actions
     document.getElementById('btn-copy').addEventListener('click', copyResponse);
     document.getElementById('btn-insert').addEventListener('click', insertResponse);
+
+    // Follow-up conversation
+    document.getElementById('btn-followup').addEventListener('click', handleFollowUp);
+    document.getElementById('btn-new-conversation').addEventListener('click', startNewConversation);
 }
 
 function loadSettingsIntoForm() {
@@ -299,7 +304,7 @@ function extractUserReply(fullBody) {
     return userReply;
 }
 
-async function sendToChatGPT(userPrompt) {
+async function sendToChatGPT(userPrompt, isFollowUp = false) {
     const apiKey = localStorage.getItem(STORAGE_KEYS.API_KEY);
     const customInstructions = localStorage.getItem(STORAGE_KEYS.SYSTEM_INSTRUCTIONS) || '';
     const model = localStorage.getItem(STORAGE_KEYS.MODEL) || 'gpt-4o';
@@ -312,12 +317,27 @@ async function sendToChatGPT(userPrompt) {
 
     showLoading(true);
     hideError();
-    hideResponse();
+    if (!isFollowUp) {
+        hideResponse();
+    }
 
     // Build system prompt
     let systemPrompt = DEFAULT_SYSTEM_PROMPT;
     if (customInstructions) {
         systemPrompt += `\n\nCRITICAL - User's Custom Instructions (YOU MUST FOLLOW THESE):\n${customInstructions}\n\nAlways apply these custom instructions to every response.`;
+    }
+
+    // Build messages array
+    let messages = [{ role: 'system', content: systemPrompt }];
+
+    if (isFollowUp && conversationHistory.length > 0) {
+        // Include conversation history for follow-ups
+        messages = messages.concat(conversationHistory);
+        messages.push({ role: 'user', content: userPrompt });
+    } else {
+        // Start fresh conversation
+        conversationHistory = [];
+        messages.push({ role: 'user', content: userPrompt });
     }
 
     try {
@@ -329,10 +349,7 @@ async function sendToChatGPT(userPrompt) {
             },
             body: JSON.stringify({
                 model: model,
-                messages: [
-                    { role: 'system', content: systemPrompt },
-                    { role: 'user', content: userPrompt }
-                ],
+                messages: messages,
                 temperature: 0.7,
                 max_tokens: 2000
             })
@@ -345,6 +362,10 @@ async function sendToChatGPT(userPrompt) {
 
         const data = await response.json();
         const assistantMessage = data.choices[0]?.message?.content || 'No response received.';
+
+        // Store in conversation history
+        conversationHistory.push({ role: 'user', content: userPrompt });
+        conversationHistory.push({ role: 'assistant', content: assistantMessage });
 
         showResponse(assistantMessage);
 
@@ -464,4 +485,32 @@ function showToast(message) {
     setTimeout(() => {
         toast.remove();
     }, 3000);
+}
+
+async function handleFollowUp() {
+    const followUpInput = document.getElementById('followup-input');
+    const followUpText = followUpInput.value.trim();
+
+    if (!followUpText) {
+        showError('Please enter your follow-up request.');
+        return;
+    }
+
+    if (conversationHistory.length === 0) {
+        showError('No conversation to follow up on. Please use one of the action buttons first.');
+        return;
+    }
+
+    // Clear the input
+    followUpInput.value = '';
+
+    // Send as follow-up (maintains conversation history)
+    await sendToChatGPT(followUpText, true);
+}
+
+function startNewConversation() {
+    conversationHistory = [];
+    document.getElementById('followup-input').value = '';
+    hideResponse();
+    showToast('Conversation cleared. Ready for a new request.');
 }
